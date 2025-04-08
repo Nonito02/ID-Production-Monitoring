@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ID Production Monitoring</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <header>
+    <div class="header-content">
+        <img src="U.EP Logo.png" alt="UEP Logo" class="logo" />
+
+      <h1>ID Production Monitoring</h1>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="search-section">
+      <h2>Check your ID Request</h2>
+      <div class="user-input">
+        <input type="text" id="searchName" placeholder="Enter Full Name" />
+        <button id="search">Search</button>
+      </div>
+    </div>
+
+    <div class="results-section">
+      <h2>Search Results</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Full Name</th>
+            <th>Course</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="studentTableBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Popup Banner -->
+  <div id="popupBanner" class="popup-banner">
+    <div class="popup-content">
+      <button class="close-btn" onclick="closePopup()">×</button>
+      <h2>Welcome to the <span style="color: navy;">ID Production Monitoring System</span></h2>
+      <p>
+        This system allows students to check the status of their ID requests.
+        <br /><br />
+        <strong>Guidelines:</strong>
+        <ul>
+          <li>✅ Enter your full name to search for your ID status.</li>
+          <li>📋 Status can be <b>Ready to Claim</b>, or <b>Claimed</b>.</li>
+          <li>📞 If your name is not found, contact the ID Production Office.</li>
+          <li style="color: darkgoldenrod;"><strong>⚠ Note:</strong> If your name is not listed and you submitted your requirements in <b>2024</b>, please <u>resubmit your requirements</u> at the ID Production Office. Thank you!</li>
+        </ul>
+      </p>
+    </div>
+  </div>
+  
+  
+  
+
+  <!-- Scripts -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.2/xlsx.full.min.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.4.2/firebase.js"></script>
+  <script src="fireConfig.js"></script>
+  <script src="searchScript.js"></script>
+  <script>
+    // Show popup on page load
+    window.onload = function () {
+      document.getElementById("popupBanner").style.display = "flex";
+    };
+  
+    // Close popup
+    function closePopup() {
+      document.getElementById("popupBanner").style.display = "none";
+    }
+  </script>
+  
+</body>
+</html>
