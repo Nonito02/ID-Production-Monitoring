@@ -33,45 +33,35 @@ function loadAllStudents() {
 
 // Search function
 document.getElementById("search").addEventListener("click", function () {
-  const searchName = document.getElementById("searchName").value.trim().toLowerCase();
-  const searchCourse = document.getElementById("searchCourse").value.trim().toLowerCase(); // Get course from search input
-  
-  if (searchName === "" && searchCourse === "") {
-    loadAllStudents(); // Load all if both search fields are empty
+  const searchName = document.getElementById("searchName").value.toLowerCase();
+  const tableBody = document.getElementById("studentTableBody");
+  tableBody.innerHTML = "";
+
+  if (searchName === "") {
+    alert("Please enter a full name.");
     return;
   }
 
-  firebase.database().ref("student").once("value")
-    .then(snapshot => {
-      const students = snapshot.val();
-      const filtered = {};
+  firebase.database().ref("students").once("value", function (snapshot) {
+    let found = false;
+    snapshot.forEach(function (childSnapshot) {
+      const student = childSnapshot.val();
+      const fullName = student.name.toLowerCase();
 
-      if (students) {
-        for (let id in students) {
-          const student = students[id];
-
-          // Check if student name or course matches search input
-          if (
-            (student.name && student.name.toLowerCase().includes(searchName)) ||
-            (student.course && student.course.toLowerCase().includes(searchCourse))
-          ) {
-            filtered[id] = student;
-          }
-        }
+      if (fullName.includes(searchName)) {
+        found = true;
+        const row = `
+          <tr>
+            <td>${student.name}</td>
+            <td>${student.course}</td>
+            <td>${student.status}</td>
+          </tr>`;
+        tableBody.innerHTML += row;
       }
-
-      displayStudents(filtered);
-
-      if (Object.keys(filtered).length === 0) {
-        document.getElementById("studentTableBody").innerHTML = `
-          <tr><td colspan="3">No results found for: <b>${searchName || searchCourse}</b></td></tr>
-        `;
-      }
-    })
-    .catch(error => {
-      console.error("Search failed:", error);
     });
-});
 
-// Load all students on initial page load
-window.addEventListener("DOMContentLoaded", loadAllStudents);
+    if (!found) {
+      tableBody.innerHTML = `<tr><td colspan="3">No results found.</td></tr>`;
+    }
+  });
+});
