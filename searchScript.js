@@ -59,7 +59,18 @@ function searchStudents(keyword) {
     });
 }
 
-// Handle search button click
+// Handle search input (live search while typing)
+document.getElementById("searchName").addEventListener("input", function () {
+  const keyword = this.value.trim();
+
+  if (keyword === "") {
+    loadAllStudents();
+  } else {
+    searchStudents(keyword);
+  }
+});
+
+// Handle search button click (optional)
 document.getElementById("search").addEventListener("click", function () {
   const keyword = document.getElementById("searchName").value.trim();
 
