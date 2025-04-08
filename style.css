@@ -1,0 +1,329 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
+  }
+  
+  header {
+    background-color: #2c3e50;
+    color: white;
+    text-align: center;
+    padding: 20px;
+  }
+  
+  .container {
+    max-width: 1000px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .search-section {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .search-section h2 {
+    margin-bottom: 10px;
+  }
+  
+  .user-input {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+  }
+  
+  #searchName {
+    padding: 8px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  #search {
+    padding: 8px 16px;
+    font-size: 14px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  #search:hover {
+    background-color: #2980b9;
+  }
+  
+  .results-section h2 {
+    margin-bottom: 10px;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+  
+  th, td {
+    padding: 12px;
+    text-align: left;
+    border: 1px solid #ddd;
+  }
+  
+  th {
+    background-color: #3498db;
+    color: white;
+  }
+  
+  tr:nth-child(even) {
+    background-color: #f2f2f2;
+  }
+  
+  tr:hover {
+    background-color: #f1f1f1;
+  }
+  
+  /* Sticky header with logo */
+header {
+    position: sticky;
+    top: 0;
+    background-color: #ffffff;
+    padding: 10px 20px;
+    border-bottom: 1px solid #ccc;
+    z-index: 1000;
+  }
+  
+  .header-content {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+  
+  .logo {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+  }
+  
+  /* Optional: Smooth sticky feel */
+  body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+  }
+  
+  .container {
+    padding: 20px;
+  }
+  
+
+  /* Make header sticky */
+header {
+    position: sticky;
+    top: 0;
+    background-color: white;
+    padding: 10px 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    z-index: 999;
+  }
+  
+  /* Header content layout */
+  .header-content {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+  
+  /* Logo image */
+  .logo {
+    height: 50px;
+    width: auto;
+  }
+  
+  /* Header title in navy blue */
+  header h1 {
+    color: navy;
+    font-size: 1.8rem;
+    margin: 0;
+  }
+  
+  /* Container and layout */
+  .container {
+    max-width: 900px;
+    margin: 20px auto;
+    padding: 0 15px;
+  }
+  
+  /* Search section styling */
+  .search-section {
+    margin-bottom: 30px;
+  }
+  
+  .search-section h2 {
+    color: #333;
+  }
+  
+  .user-input {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+  }
+  
+  input[type="text"] {
+    padding: 10px;
+    font-size: 1rem;
+    flex: 1;
+  }
+  
+  button#search {
+    padding: 10px 20px;
+    background-color: navy;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  
+  button#search:hover {
+    background-color: #003366;
+  }
+  
+  /* Results table */
+  .results-section h2 {
+    margin-bottom: 10px;
+    color: #333;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  thead th {
+    background-color: navy;
+    color: white;
+    padding: 10px;
+    text-align: left;
+  }
+  
+  tbody td {
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+  }
+
+  /* Popup Banner Styles */
+.popup-banner {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+  }
+  
+  .popup-content {
+    background-color: white;
+    padding: 30px;
+    max-width: 500px;
+    text-align: left;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+  }
+  
+  .popup-content h2 {
+    color: navy;
+    margin-top: 0;
+  }
+  
+  .popup-content ul {
+    padding-left: 20px;
+  }
+  
+  .popup-content button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: navy;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .popup-content button:hover {
+    background-color: #003366;
+  }
+  
+  .popup-banner {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.95);
+    border-bottom: 2px solid navy;
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 20px 10px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  }
+  
+  .popup-content {
+    background: white;
+    border-radius: 10px;
+    padding: 30px;
+    position: relative;
+    width: 90%;
+    max-width: 600px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+  }
+  
+  .popup-content h2 {
+    color: navy;
+    font-size: 24px;
+    margin-top: 0;
+  }
+  
+  .popup-content ul {
+    list-style: none;
+    padding-left: 0;
+    margin-top: 10px;
+  }
+  
+  .popup-content ul li {
+    margin-bottom: 10px;
+    font-size: 16px;
+  }
+  
+  .close-btn {
+    position: absolute;
+    top: 8px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 18px; /* Smaller font size for the 'X' button */
+    color: gray;
+    cursor: pointer;
+    font-weight: bold;
+    padding: 5px;
+  }
+  
+  .close-btn:hover {
+    color: red;
+  }
+  
+  
+ 
+  
