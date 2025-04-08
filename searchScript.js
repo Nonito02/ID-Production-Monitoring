@@ -33,25 +33,30 @@ function loadAllStudents() {
 
 // Search function (works with any keyword in name or course or status)
 function searchStudents(keyword) {
-  const tableBody = document.getElementById("studentTableBody");
-  tableBody.innerHTML = "";
+  firebase.database().ref("student").once("value")
+    .then(snapshot => {
+      const students = snapshot.val();
+      const results = {};
 
-  firebase.database().ref("student").once("value", snapshot => {
-    const students = snapshot.val();
-    const results = {};
+      if (students) {
+        Object.keys(students).forEach(key => {
+          const student = students[key];
+          const searchString = `${student.name} ${student.course} ${student.status}`.toLowerCase();
+          if (searchString.includes(keyword.toLowerCase())) {
+            results[key] = student;
+          }
+        });
+      }
 
-    if (students) {
-      Object.keys(students).forEach(key => {
-        const student = students[key];
-        const searchString = `${student.name} ${student.course} ${student.status}`.toLowerCase();
-        if (searchString.includes(keyword.toLowerCase())) {
-          results[key] = student;
-        }
-      });
-    }
-
-    displayStudents(results);
-  });
+      displayStudents(results);
+    })
+    .catch(error => {
+      console.error("Search failed:", error);
+      const tableBody = document.getElementById("studentTableBody");
+      tableBody.innerHTML = `
+        <tr><td colspan="3">Error loading student data.</td></tr>
+      `;
+    });
 }
 
 // Handle search button click
