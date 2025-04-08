@@ -59,30 +59,32 @@ function searchStudents(keyword) {
     });
 }
 
-// Handle search input (live search while typing)
-document.getElementById("searchName").addEventListener("input", function () {
-  const keyword = this.value.trim();
-
-  if (keyword === "") {
-    loadAllStudents();
-  } else {
-    searchStudents(keyword);
-  }
-});
-
-// Handle search button click (optional)
-document.getElementById("search").addEventListener("click", function () {
-  const keyword = document.getElementById("searchName").value.trim();
-
-  if (keyword === "") {
-    loadAllStudents(); // If empty, load all students
-  } else {
-    searchStudents(keyword); // Else search
-  }
-});
-
-// Load all students on page load
-window.onload = function () {
+// Live search while typing
+document.addEventListener("DOMContentLoaded", function () {
+  // Display all students on page load
   loadAllStudents();
+
+  // Show popup
   document.getElementById("popupBanner").style.display = "flex";
-};
+
+  // Handle live search input
+  const searchInput = document.getElementById("searchName");
+  searchInput.addEventListener("input", function () {
+    const keyword = this.value.trim();
+    if (keyword === "") {
+      loadAllStudents();
+    } else {
+      searchStudents(keyword);
+    }
+  });
+
+  // Optional: manual search button
+  document.getElementById("search").addEventListener("click", function () {
+    const keyword = searchInput.value.trim();
+    if (keyword === "") {
+      loadAllStudents();
+    } else {
+      searchStudents(keyword);
+    }
+  });
+});
