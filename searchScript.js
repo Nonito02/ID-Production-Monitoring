@@ -1,7 +1,7 @@
 // Function to display students
 function displayStudents(students) {
   const tableBody = document.getElementById("studentTableBody");
-  tableBody.innerHTML = ""; // Clear previous results
+  tableBody.innerHTML = "";
 
   if (students && Object.keys(students).length > 0) {
     Object.values(students).forEach(student => {
@@ -19,7 +19,7 @@ function displayStudents(students) {
   }
 }
 
-// Function to load and display all students
+// Load and display all students
 function loadAllStudents() {
   firebase.database().ref("student").once("value")
     .then(snapshot => {
@@ -31,37 +31,42 @@ function loadAllStudents() {
     });
 }
 
-// Search function
-document.getElementById("search").addEventListener("click", function () {
-  const searchName = document.getElementById("searchName").value.toLowerCase();
+// Search function (works with any keyword in name or course or status)
+function searchStudents(keyword) {
   const tableBody = document.getElementById("studentTableBody");
   tableBody.innerHTML = "";
 
-  if (searchName === "") {
-    alert("Please enter a full name.");
-    return;
-  }
+  firebase.database().ref("student").once("value", snapshot => {
+    const students = snapshot.val();
+    const results = {};
 
-  firebase.database().ref("students").once("value", function (snapshot) {
-    let found = false;
-    snapshot.forEach(function (childSnapshot) {
-      const student = childSnapshot.val();
-      const fullName = student.name.toLowerCase();
-
-      if (fullName.includes(searchName)) {
-        found = true;
-        const row = `
-          <tr>
-            <td>${student.name}</td>
-            <td>${student.course}</td>
-            <td>${student.status}</td>
-          </tr>`;
-        tableBody.innerHTML += row;
-      }
-    });
-
-    if (!found) {
-      tableBody.innerHTML = `<tr><td colspan="3">No results found.</td></tr>`;
+    if (students) {
+      Object.keys(students).forEach(key => {
+        const student = students[key];
+        const searchString = `${student.name} ${student.course} ${student.status}`.toLowerCase();
+        if (searchString.includes(keyword.toLowerCase())) {
+          results[key] = student;
+        }
+      });
     }
+
+    displayStudents(results);
   });
+}
+
+// Handle search button click
+document.getElementById("search").addEventListener("click", function () {
+  const keyword = document.getElementById("searchName").value.trim();
+
+  if (keyword === "") {
+    loadAllStudents(); // If empty, load all students
+  } else {
+    searchStudents(keyword); // Else search
+  }
 });
+
+// Load all students on page load
+window.onload = function () {
+  loadAllStudents();
+  document.getElementById("popupBanner").style.display = "flex";
+};
