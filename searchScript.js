@@ -43,6 +43,7 @@ function searchExactName(name) {
       if (students) {
         for (const key in students) {
           const student = students[key];
+          // Check for exact match on name (case-insensitive)
           if (student.name && student.name.trim().toLowerCase() === name.trim().toLowerCase()) {
             exactMatch = student; // Set first match
             break; // Stop after the first match
@@ -50,7 +51,7 @@ function searchExactName(name) {
         }
       }
 
-      displayStudent(exactMatch); // Display the first student found
+      displayStudent(exactMatch); // Display the first student found or null if not found
     })
     .catch(error => {
       console.error("Search failed:", error);
