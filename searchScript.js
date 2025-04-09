@@ -4,7 +4,7 @@ function toggleLoader(show) {
   loader.style.display = show ? "block" : "none";
 }
 
-// Function to display students (only course and status for privacy)
+// Function to display students (show Name, Course, and Status only after search)
 function displayStudents(students) {
   const tableBody = document.getElementById("studentTableBody");
   tableBody.innerHTML = "";
@@ -13,13 +13,14 @@ function displayStudents(students) {
     Object.values(students).forEach(student => {
       const row = tableBody.insertRow();
       row.innerHTML = `
+        <td>${student.name || "N/A"}</td>
         <td>${student.course || "N/A"}</td>
         <td>${student.status || "Pending"}</td>
       `;
     });
   } else {
     tableBody.innerHTML = `
-      <tr><td colspan="2">No student records found.</td></tr>
+      <tr><td colspan="3">No student records found.</td></tr>
     `;
   }
 }
@@ -49,7 +50,7 @@ function searchStudents(keyword) {
       console.error("Search failed:", error);
       const tableBody = document.getElementById("studentTableBody");
       tableBody.innerHTML = `
-        <tr><td colspan="2">Error loading student data.</td></tr>
+        <tr><td colspan="3">Error loading student data.</td></tr>
       `;
       toggleLoader(false);
     });
@@ -59,10 +60,10 @@ document.addEventListener("DOMContentLoaded", function () {
   const tableBody = document.getElementById("studentTableBody");
   const searchInput = document.getElementById("searchName");
   const clearButton = document.getElementById("clear");
-  
+
   // Privacy message on load
   tableBody.innerHTML = `
-    <tr><td colspan="2">Student list is hidden for privacy. Use the search bar to find a student.</td></tr>
+    <tr><td colspan="3">Student list is hidden for privacy. Use the search bar to find a student.</td></tr>
   `;
 
   // Show popup
@@ -73,7 +74,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const keyword = this.value.trim();
     if (keyword === "") {
       tableBody.innerHTML = `
-        <tr><td colspan="2">Student list is hidden for privacy. Use the search bar to find a student.</td></tr>
+        <tr><td colspan="3">Student list is hidden for privacy. Use the search bar to find a student.</td></tr>
       `;
     } else {
       searchStudents(keyword);
@@ -85,7 +86,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const keyword = searchInput.value.trim();
     if (keyword === "") {
       tableBody.innerHTML = `
-        <tr><td colspan="2">Student list is hidden for privacy. Use the search bar to find a student.</td></tr>
+        <tr><td colspan="3">Student list is hidden for privacy. Use the search bar to find a student.</td></tr>
       `;
     } else {
       searchStudents(keyword);
@@ -96,7 +97,7 @@ document.addEventListener("DOMContentLoaded", function () {
   clearButton.addEventListener("click", function () {
     searchInput.value = "";
     tableBody.innerHTML = `
-      <tr><td colspan="2">Student list is hidden for privacy. Use the search bar to find a student.</td></tr>
+      <tr><td colspan="3">Student list is hidden for privacy. Use the search bar to find a student.</td></tr>
     `;
   });
 });
