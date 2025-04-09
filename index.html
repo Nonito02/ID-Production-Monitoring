@@ -7,6 +7,17 @@
   <title>ID Production Monitoring</title>
   <link rel="stylesheet" href="style.css" />
   <style>
+
+    .mySlides {
+  display: none;
+  width: 100%;
+  max-width: 400px;
+  height: 300px;
+  margin-right: 10px;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
     /* --- Slideshow Styles --- */
     .slideshow-container {
       display: flex;
@@ -172,6 +183,27 @@
   <script src="https://www.gstatic.com/firebasejs/8.4.2/firebase.js"></script>
   <script src="fireConfig.js"></script>
   <script>
+
+    let slideIndex = 0;
+
+  function showSlides() {
+    const slides = document.getElementsByClassName("mySlides");
+    for (let i = 0; i < slides.length; i++) {
+      slides[i].style.display = "none"; 
+    }
+
+    slideIndex++;
+    if (slideIndex > slides.length) slideIndex = 1;
+
+    slides[slideIndex - 1].style.display = "block";
+
+    setTimeout(showSlides, 3000); // Change image every 3 seconds
+  }
+
+  // Start the slideshow on load
+  window.addEventListener("DOMContentLoaded", () => {
+    showSlides();
+  });
     // Show popup on load
     window.onload = () => {
       document.getElementById("popupBanner").style.display = "flex";
