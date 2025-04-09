@@ -131,14 +131,14 @@
     <div class="search-section">
       <h2>Check your ID Request</h2>
       <div class="user-input">
-        <input type="text" id="searchName" placeholder="Enter Full Name" />
+        <input type="text" id="searchName" placeholder="Lastname, givenname, middlename" />
         <button id="search">Search</button>
         <button id="clear">Clear</button>
       </div>
     </div>
 
    <div class="spinner-grow" role="status">
-  <span class="visually-hidden">Loading...</span>
+
 </div>
 
     <div class="results-section">
@@ -315,29 +315,53 @@
       // Show popup
       document.getElementById("popupBanner").style.display = "flex";
 
-      // Live search
-      searchInput.addEventListener("input", function () {
-        const keyword = this.value.trim();
-        if (keyword === "") {
-          tableBody.innerHTML = `
-            <tr><td colspan="3">Student list is hidden for privacy. Use the search bar to find a student.</td></tr>
-          `;
-        } else {
-          searchStudents(keyword);
-        }
-      });
+   // Live search
+searchInput.addEventListener("input", function () {
+  const keyword = this.value.trim().toLowerCase();  // Convert the keyword to lowercase
+  if (keyword === "") {
+    tableBody.innerHTML = `
+      <tr><td colspan="3">Student list is hidden for privacy. Use the search bar to find a student.</td></tr>
+    `;
+  } else {
+    searchStudents(keyword);
+  }
+});
 
-      // Manual search
-      document.getElementById("search").addEventListener("click", function () {
-        const keyword = searchInput.value.trim();
-        if (keyword === "") {
-          tableBody.innerHTML = `
-            <tr><td colspan="3">Student list is hidden for privacy. Use the search bar to find a student.</td></tr>
-          `;
-        } else {
-          searchStudents(keyword);
-        }
-      });
+// Manual search
+document.getElementById("search").addEventListener("click", function () {
+  const keyword = searchInput.value.trim().toLowerCase();  // Convert the keyword to lowercase
+  if (keyword === "") {
+    tableBody.innerHTML = `
+      <tr><td colspan="3">Student list is hidden for privacy. Use the search bar to find a student.</td></tr>
+    `;
+  } else {
+    searchStudents(keyword);
+  }
+});
+
+// Updated search function to handle case-insensitive search
+function searchStudents(keyword) {
+  const rows = document.querySelectorAll("#tableBody tr");
+  rows.forEach(row => {
+    const cells = row.getElementsByTagName("td");
+    let found = false;
+
+    // Iterate through the cells and check if the keyword matches any cell's content
+    Array.from(cells).forEach(cell => {
+      if (cell.textContent.toLowerCase().includes(keyword)) {  // Convert each cell's content to lowercase
+        found = true;
+      }
+    });
+
+    // Display or hide the row based on whether it matches the keyword
+    if (found) {
+      row.style.display = "";
+    } else {
+      row.style.display = "none";
+    }
+  });
+}
+
 
       // Clear button
       clearButton.addEventListener("click", function () {
