@@ -7,6 +7,36 @@
   <title>ID Production Monitoring</title>
   <link rel="stylesheet" href="style.css" />
   <style>
+
+    .mySlides img {
+  width: 100%;
+  height: auto;
+  max-height: 300px; /* limit the image height */
+  object-fit: contain;
+  border-radius: 8px;
+}
+
+/* Media query for small screens */
+@media (max-width: 768px) {
+  .mySlides img {
+    max-height: 150px;
+  }
+
+  .slideshow-text {
+    font-size: 16px;
+    padding: 6px;
+  }
+
+  .popup-content {
+    width: 95%;
+    padding: 1rem;
+  }
+
+  .popup-content h2 {
+    font-size: 20px;
+  }
+}
+
     /* Existing Styles */
     #loader {
       display: none;
