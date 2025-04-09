@@ -1,7 +1,7 @@
 // Function to display one student or show "Visit the ID Production" with image
 function displayStudent(student) {
   const tableBody = document.getElementById("studentTableBody");
-  tableBody.innerHTML = ""; // Always clear table first
+  tableBody.innerHTML = "";
 
   if (student) {
     const row = tableBody.insertRow();
@@ -15,21 +15,26 @@ function displayStudent(student) {
       <tr>
         <td colspan="3" style="text-align: center;">
           <p>Visit the ID Production</p>
-          <img src="path_to_your_image.jpg" alt="ID Production" style="max-width: 200px; margin-top: 10px;" />
+          <img src="path_to_your_image.jpg" alt="Visit Office" style="max-width: 200px; margin-top: 10px;" />
         </td>
       </tr>
     `;
   }
 }
 
-// Clear the student table
+// Clear the student table (used when input is cleared)
 function clearTable() {
   const tableBody = document.getElementById("studentTableBody");
   tableBody.innerHTML = "";
 }
 
-// Search and display only one matching student
+// Search and display only one matched student
 function searchStudents(keyword) {
+  if (!keyword.trim()) {
+    clearTable(); // Don't show anything if input is empty
+    return;
+  }
+
   firebase.database().ref("student").once("value")
     .then(snapshot => {
       const students = snapshot.val();
@@ -41,12 +46,12 @@ function searchStudents(keyword) {
           const searchString = `${student.name} ${student.course} ${student.status}`.toLowerCase();
           if (searchString.includes(keyword.toLowerCase())) {
             foundStudent = student;
-            break; // Stop at first match
+            break;
           }
         }
       }
 
-      displayStudent(foundStudent); // Show result or message + image
+      displayStudent(foundStudent);
     })
     .catch(error => {
       console.error("Search failed:", error);
@@ -61,21 +66,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Live search
   searchInput.addEventListener("input", function () {
-    const keyword = this.value.trim();
-    if (keyword === "") {
-      clearTable(); // Do not show anything
-    } else {
-      searchStudents(keyword);
-    }
+    searchStudents(this.value.trim());
   });
 
-  // Manual search (optional)
+  // Manual search button (optional)
   document.getElementById("search").addEventListener("click", function () {
-    const keyword = searchInput.value.trim();
-    if (keyword === "") {
-      clearTable(); // Do not show anything
-    } else {
-      searchStudents(keyword);
-    }
+    searchStudents(searchInput.value.trim());
   });
 });
