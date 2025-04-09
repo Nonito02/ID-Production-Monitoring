@@ -9,41 +9,45 @@
   <style>
 
     
+/* --- Slideshow Styles --- */
+.slideshow-container {
+  display: flex;
+  overflow-x: auto;
+  margin-top: 30px;
+  padding: 10px;
+  border-radius: 12px;
+  gap: 10px; /* Adds space between slides */
+}
+
 .mySlides {
   flex: 0 0 auto;
-  width: 300px; /* Medium width */
-  height: 200px; /* Medium height */
-  margin-right: 10px;
+  width: 100%; /* Make the slides take full container width */
+  max-width: 300px; /* Max width for slides */
+  height: auto; /* Allow height to adjust based on content */
   border-radius: 12px;
   overflow: hidden;
 }
 
-    
-    
+/* Ensure images scale appropriately */
+.mySlides img {
+  width: 100%; /* Make image take full width of the slide */
+  height: auto; /* Allow height to adjust proportionally */
+  object-fit: cover; /* Maintain aspect ratio and cover the container */
+}
 
+/* --- Responsive Design --- */
+@media (max-width: 768px) {
+  .mySlides {
+    max-width: 100%; /* Full width on smaller screens */
+    height: auto; /* Allow height to scale */
+  }
 
-    /* --- Slideshow Styles --- */
-    .slideshow-container {
-      display: flex;
-      overflow-x: auto;
-      margin-top: 30px;
-      padding: 10px;
-      border-radius: 12px;
-    }
+  .slideshow-container {
+    flex-wrap: wrap; /* Stack slides on smaller screens */
+    justify-content: center; /* Center slides */
+  }
+}
 
-   
-
-    .mySlides img {
-      width: 70%;
-      height: 80%;
-      object-fit: cover;
-    }
-
-    @media (max-width: 768px) {
-      .mySlides {
-        height: 150px;
-      }
-    }
 
     /* --- Loader --- */
     #loader {
