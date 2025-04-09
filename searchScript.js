@@ -1,4 +1,4 @@
-// Function to display one student or show "Visit the ID Production" with image
+// Function to display a single student or show message if not found
 function displayStudent(student) {
   const tableBody = document.getElementById("studentTableBody");
   tableBody.innerHTML = "";
@@ -22,41 +22,39 @@ function displayStudent(student) {
   }
 }
 
-// Clear the student table (used when input is cleared)
+// Clear table content
 function clearTable() {
   const tableBody = document.getElementById("studentTableBody");
   tableBody.innerHTML = "";
 }
 
-// Search and display only one matched student
-function searchStudents(keyword) {
-  if (!keyword.trim()) {
-    clearTable(); // Don't show anything if input is empty
+// Function to search by exact name only
+function searchExactName(name) {
+  if (!name.trim()) {
+    clearTable(); // Show nothing
     return;
   }
 
   firebase.database().ref("student").once("value")
     .then(snapshot => {
       const students = snapshot.val();
-      let foundStudent = null;
+      let exactMatch = null;
 
       if (students) {
         for (const key in students) {
           const student = students[key];
-          const searchString = `${student.name} ${student.course} ${student.status}`.toLowerCase();
-          if (searchString.includes(keyword.toLowerCase())) {
-            foundStudent = student;
+          if (student.name && student.name.trim().toLowerCase() === name.trim().toLowerCase()) {
+            exactMatch = student;
             break;
           }
         }
       }
 
-      displayStudent(foundStudent);
+      displayStudent(exactMatch);
     })
     .catch(error => {
       console.error("Search failed:", error);
-      const tableBody = document.getElementById("studentTableBody");
-      tableBody.innerHTML = `<tr><td colspan="3">Error loading student data.</td></tr>`;
+      clearTable();
     });
 }
 
@@ -64,13 +62,13 @@ function searchStudents(keyword) {
 document.addEventListener("DOMContentLoaded", function () {
   const searchInput = document.getElementById("searchName");
 
-  // Live search
+  // Live search with exact match
   searchInput.addEventListener("input", function () {
-    searchStudents(this.value.trim());
+    searchExactName(this.value);
   });
 
-  // Manual search button (optional)
+  // Optional manual search button
   document.getElementById("search").addEventListener("click", function () {
-    searchStudents(searchInput.value.trim());
+    searchExactName(searchInput.value);
   });
 });
