@@ -15,7 +15,7 @@ function displayStudent(student) {
       <tr>
         <td colspan="3" style="text-align: center;">
           <p>Visit the ID Production</p>
-          <img src="path_to_your_image.jpg" alt="Visit Office" style="max-width: 200px; margin-top: 10px;" />
+          <img src="steps.png" alt="Visit Office" style="max-width: 200px; margin-top: 10px;" />
         </td>
       </tr>
     `;
