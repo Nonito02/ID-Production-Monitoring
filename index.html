@@ -44,6 +44,21 @@
       border: none;
       cursor: pointer;
     }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 10px;
+      text-align: left;
+      border: 1px solid #ddd;
+    }
+
+    th {
+      background-color: #f2f2f2;
+    }
   </style>
 </head>
 <body>
@@ -72,13 +87,13 @@
       <table>
         <thead>
           <tr>
-            <!-- <th>Full Name</th> --> <!-- Hidden for privacy -->
+            <th>Full Name</th>
             <th>Course</th>
             <th>Status</th>
           </tr>
         </thead>
         <tbody id="studentTableBody">
-          <tr><td colspan="2">Student list is hidden for privacy. Use the search bar to find a student.</td></tr>
+          <tr><td colspan="3">Student list is hidden for privacy. Use the search bar to find a student.</td></tr>
         </tbody>
       </table>
     </div>
