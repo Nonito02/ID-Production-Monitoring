@@ -1,50 +1,59 @@
-// Function to show/hide the loader
-function toggleLoader(show) {
-  const loader = document.getElementById("loader");
-  loader.style.display = show ? "block" : "none";
-}
-
-// Function to display students (show Name, Course, and Status only after search)
-function displayStudents(students) {
+// Function to display a single student or show "No records found" message with an image
+function displayStudent(student) {
   const tableBody = document.getElementById("studentTableBody");
-  tableBody.innerHTML = "";
+  tableBody.innerHTML = ""; // Clear the table before displaying the result
 
-  if (students && Object.keys(students).length > 0) {
-    Object.values(students).forEach(student => {
-      const row = tableBody.insertRow();
-      row.innerHTML = `
-        <td>${student.name || "N/A"}</td>
-        <td>${student.course || "N/A"}</td>
-        <td>${student.status || "Pending"}</td>
-      `;
-    });
+  if (student) {
+    // If a student is found, display their details
+    const row = tableBody.insertRow();
+    row.innerHTML = `
+      <td>${student.name || "N/A"}</td>
+      <td>${student.course || "N/A"}</td>
+      <td>${student.status || "Pending"}</td>
+    `;
   } else {
+    // If no student is found, display the "Visit the ID Production" message and show an image
     tableBody.innerHTML = `
-      <tr><td colspan="3">No student records found.</td></tr>
+      <tr><td colspan="3">
+        <p>Visit the ID Production</p>
+        <img src="path_to_your_image.jpg" alt="ID Production" style="max-width: 200px; margin-top: 10px;" />
+      </td></tr>
     `;
   }
 }
 
-// Search function
-function searchStudents(keyword) {
-  toggleLoader(true);
+// Load and display all students
+function loadAllStudents() {
   firebase.database().ref("student").once("value")
     .then(snapshot => {
       const students = snapshot.val();
-      const results = {};
+      displayStudent(null); // Clear display if loading all students (optional)
+    })
+    .catch(error => {
+      console.error("Failed to load students:", error);
+    });
+}
+
+// Search function (works with any keyword in name, course, or status)
+function searchStudents(keyword) {
+  firebase.database().ref("student").once("value")
+    .then(snapshot => {
+      const students = snapshot.val();
+      let foundStudent = null; // To store the first matching student
 
       if (students) {
+        // Loop through students and find the first matching one
         Object.keys(students).forEach(key => {
           const student = students[key];
           const searchString = `${student.name} ${student.course} ${student.status}`.toLowerCase();
           if (searchString.includes(keyword.toLowerCase())) {
-            results[key] = student;
+            foundStudent = student; // Assign the first matching student
           }
         });
       }
 
-      displayStudents(results);
-      toggleLoader(false);
+      // Display the found student or the "Visit the ID Production" message with the image
+      displayStudent(foundStudent);
     })
     .catch(error => {
       console.error("Search failed:", error);
@@ -52,52 +61,35 @@ function searchStudents(keyword) {
       tableBody.innerHTML = `
         <tr><td colspan="3">Error loading student data.</td></tr>
       `;
-      toggleLoader(false);
     });
 }
 
+// Live search while typing
 document.addEventListener("DOMContentLoaded", function () {
-  const tableBody = document.getElementById("studentTableBody");
-  const searchInput = document.getElementById("searchName");
-  const clearButton = document.getElementById("clear");
-
-  // Privacy message on load
-  tableBody.innerHTML = `
-    <tr><td colspan="3">Student list is hidden for privacy. Use the search bar to find a student.</td></tr>
-  `;
+  // Display all students on page load (optional)
+  loadAllStudents();
 
   // Show popup
   document.getElementById("popupBanner").style.display = "flex";
 
-  // Live search
+  // Handle live search input
+  const searchInput = document.getElementById("searchName");
   searchInput.addEventListener("input", function () {
     const keyword = this.value.trim();
     if (keyword === "") {
-      tableBody.innerHTML = `
-        <tr><td colspan="3">Student list is hidden for privacy. Use the search bar to find a student.</td></tr>
-      `;
+      displayStudent(null); // If no keyword, clear the display
     } else {
-      searchStudents(keyword);
+      searchStudents(keyword); // Search and display the result
     }
   });
 
-  // Manual search
+  // Optional: manual search button
   document.getElementById("search").addEventListener("click", function () {
     const keyword = searchInput.value.trim();
     if (keyword === "") {
-      tableBody.innerHTML = `
-        <tr><td colspan="3">Student list is hidden for privacy. Use the search bar to find a student.</td></tr>
-      `;
+      displayStudent(null); // If no keyword, clear the display
     } else {
-      searchStudents(keyword);
+      searchStudents(keyword); // Search and display the result
     }
-  });
-
-  // Clear button
-  clearButton.addEventListener("click", function () {
-    searchInput.value = "";
-    tableBody.innerHTML = `
-      <tr><td colspan="3">Student list is hidden for privacy. Use the search bar to find a student.</td></tr>
-    `;
   });
 });
