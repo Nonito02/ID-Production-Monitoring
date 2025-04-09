@@ -268,37 +268,104 @@
         });
     }
 
-    document.addEventListener("DOMContentLoaded", () => {
-      const searchInput = document.getElementById("searchName");
-      const searchBtn = document.getElementById("search");
-      const clearBtn = document.getElementById("clear");
-      const tableBody = document.getElementById("studentTableBody");
+   document.addEventListener("DOMContentLoaded", () => {
+  const searchInput = document.getElementById("searchName");
+  const searchBtn = document.getElementById("search");
+  const clearBtn = document.getElementById("clear");
+  const tableBody = document.getElementById("studentTableBody");
 
-      const resetTable = () => {
-        tableBody.innerHTML = `
-          <tr><td colspan="3">Student list is hidden for privacy. Use the search bar to find a student.</td></tr>
+  // Helper function to reset the table
+  const resetTable = () => {
+    tableBody.innerHTML = `
+      <tr><td colspan="3">Student list is hidden for privacy. Use the search bar to find a student.</td></tr>
+    `;
+  };
+
+  resetTable();
+
+  // Function to handle the display of students
+  function displayStudents(students) {
+    tableBody.innerHTML = ""; // Clear existing rows
+
+    if (students && Object.keys(students).length > 0) {
+      Object.values(students).forEach(student => {
+        const row = tableBody.insertRow();
+        row.innerHTML = `
+          <td>${student.name || "N/A"}</td>
+          <td>${student.course || "N/A"}</td>
+          <td>${student.status || "Pending"}</td>
         `;
-      };
+      });
+    } else {
+      tableBody.innerHTML = `
+        <tr><td colspan="3">No students found for your search.</td></tr>
+      `;
+    }
+  }
 
+  // Function to search students from Firebase
+  function searchStudents(keyword) {
+    toggleLoader(true);
+    firebase.database().ref("student").once("value")
+      .then(snapshot => {
+        const students = snapshot.val();
+        const results = {};
+
+        if (students) {
+          // Loop through each student and check if the keyword matches any field
+          Object.keys(students).forEach(key => {
+            const student = students[key];
+            const searchString = `${student.name} ${student.course} ${student.status}`.toLowerCase();
+            if (searchString.includes(keyword.toLowerCase())) {
+              results[key] = student;
+            }
+          });
+        }
+
+        // Display results
+        displayStudents(results);
+        toggleLoader(false);
+      })
+      .catch(error => {
+        console.error("Search failed:", error);
+        tableBody.innerHTML = `
+          <tr><td colspan="3">Error loading student data.</td></tr>
+        `;
+        toggleLoader(false);
+      });
+  }
+
+  // Attach event listeners
+  searchBtn.addEventListener("click", () => {
+    const keyword = searchInput.value.trim();
+    if (keyword) {
+      searchStudents(keyword);
+    } else {
       resetTable();
+    }
+  });
 
-      searchBtn.addEventListener("click", () => {
-        const keyword = searchInput.value.trim();
-        if (keyword) searchStudents(keyword);
-        else resetTable();
-      });
+  clearBtn.addEventListener("click", () => {
+    searchInput.value = "";
+    resetTable();
+  });
 
-      clearBtn.addEventListener("click", () => {
-        searchInput.value = "";
-        resetTable();
-      });
+  searchInput.addEventListener("input", () => {
+    const keyword = searchInput.value.trim();
+    if (keyword) {
+      searchStudents(keyword);
+    } else {
+      resetTable();
+    }
+  });
+});
 
-      searchInput.addEventListener("input", () => {
-        const keyword = searchInput.value.trim();
-        if (keyword) searchStudents(keyword);
-        else resetTable();
-      });
-    });
+// Toggle loader visibility (if needed)
+function toggleLoader(show) {
+  const loader = document.getElementById("loader");
+  loader.style.display = show ? "block" : "none";
+}
+
   </script>
 </body>
 </html>
