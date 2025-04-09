@@ -1,10 +1,9 @@
-// Function to display a single student or show "No records found" message with an image
+// Function to display one student or show "Visit the ID Production" with image
 function displayStudent(student) {
   const tableBody = document.getElementById("studentTableBody");
-  tableBody.innerHTML = ""; // Clear the table before displaying the result
+  tableBody.innerHTML = ""; // Always clear table first
 
   if (student) {
-    // If a student is found, display their details
     const row = tableBody.insertRow();
     row.innerHTML = `
       <td>${student.name || "N/A"}</td>
@@ -12,72 +11,71 @@ function displayStudent(student) {
       <td>${student.status || "Pending"}</td>
     `;
   } else {
-    // If no student is found, display the message and image
     tableBody.innerHTML = `
-      <tr><td colspan="3">
-        <p>Visit the ID Production</p>
-        <img src="path_to_your_image.jpg" alt="ID Production" style="max-width: 200px; margin-top: 10px;" />
-      </td></tr>
+      <tr>
+        <td colspan="3" style="text-align: center;">
+          <p>Visit the ID Production</p>
+          <img src="path_to_your_image.jpg" alt="ID Production" style="max-width: 200px; margin-top: 10px;" />
+        </td>
+      </tr>
     `;
   }
 }
 
-// Load and display all students
-function loadAllStudents() {
+// Clear the student table
+function clearTable() {
   const tableBody = document.getElementById("studentTableBody");
-  tableBody.innerHTML = ""; // Clear the table if loading all students (optional)
+  tableBody.innerHTML = "";
 }
 
-// Search function (works with any keyword in name, course, or status)
+// Search and display only one matching student
 function searchStudents(keyword) {
   firebase.database().ref("student").once("value")
     .then(snapshot => {
       const students = snapshot.val();
-      let foundStudent = null; // To store the first matching student
+      let foundStudent = null;
 
       if (students) {
-        // Loop through students and find the first matching one
-        Object.keys(students).forEach(key => {
+        for (const key in students) {
           const student = students[key];
           const searchString = `${student.name} ${student.course} ${student.status}`.toLowerCase();
           if (searchString.includes(keyword.toLowerCase())) {
-            foundStudent = student; // Assign the first matching student
+            foundStudent = student;
+            break; // Stop at first match
           }
-        });
+        }
       }
 
-      // Display the found student or the "Visit the ID Production" message with the image
-      displayStudent(foundStudent);
+      displayStudent(foundStudent); // Show result or message + image
     })
     .catch(error => {
       console.error("Search failed:", error);
       const tableBody = document.getElementById("studentTableBody");
-      tableBody.innerHTML = `
-        <tr><td colspan="3">Error loading student data.</td></tr>
-      `;
+      tableBody.innerHTML = `<tr><td colspan="3">Error loading student data.</td></tr>`;
     });
 }
 
-// Live search while typing
+// DOM ready
 document.addEventListener("DOMContentLoaded", function () {
-  // Handle live search input
   const searchInput = document.getElementById("searchName");
+
+  // Live search
   searchInput.addEventListener("input", function () {
     const keyword = this.value.trim();
     if (keyword === "") {
-      loadAllStudents(); // Clear the display if no search term
+      clearTable(); // Do not show anything
     } else {
-      searchStudents(keyword); // Search and display the result
+      searchStudents(keyword);
     }
   });
 
-  // Optional: manual search button
+  // Manual search (optional)
   document.getElementById("search").addEventListener("click", function () {
     const keyword = searchInput.value.trim();
     if (keyword === "") {
-      loadAllStudents(); // Clear the display if no search term
+      clearTable(); // Do not show anything
     } else {
-      searchStudents(keyword); // Search and display the result
+      searchStudents(keyword);
     }
   });
 });
