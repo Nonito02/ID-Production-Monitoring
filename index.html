@@ -293,11 +293,11 @@
         resetTable();
       });
 
-      // searchInput.addEventListener("input", () => {
-      //   const keyword = searchInput.value.trim();
-      //   if (keyword) searchStudents(keyword);
-      //   else resetTable();
-      // });
+      searchInput.addEventListener("input", () => {
+        const keyword = searchInput.value.trim();
+        if (keyword) searchStudents(keyword);
+        else resetTable();
+      });
     });
   </script>
 </body>
