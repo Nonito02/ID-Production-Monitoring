@@ -1,16 +1,6 @@
 
 
-// Load and display all students
-function loadAllStudents() {
-  firebase.database().ref("student").once("value")
-    .then(snapshot => {
-      const students = snapshot.val();
-      displayStudents(students);
-    })
-    .catch(error => {
-      console.error("Failed to load students:", error);
-    });
-}
+
 
 // Search function (works with any keyword in name or course or status)
 function searchStudents(keyword) {
