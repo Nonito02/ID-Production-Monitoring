@@ -7,40 +7,38 @@
   <title>ID Production Monitoring</title>
   <link rel="stylesheet" href="style.css" />
   <style>
-    /* Slideshow styles */
+    /* --- Slideshow Styles --- */
     .slideshow-container {
       display: flex;
-      overflow-x: auto; /* Allows horizontal scroll */
+      overflow-x: auto;
       margin-top: 30px;
-      max-width: 100%;
       padding: 10px;
       border-radius: 12px;
     }
 
     .mySlides {
-      flex: 0 0 auto; /* Prevent the slides from shrinking or growing */
+      flex: 0 0 auto;
       width: 100%;
+      max-width: 400px;
       height: 300px;
-      object-fit: cover;
-      margin-right: 10px; /* Add space between images */
+      margin-right: 10px;
       border-radius: 12px;
+      overflow: hidden;
     }
 
     .mySlides img {
       width: 100%;
       height: 100%;
-      object-fit: cover; /* Keeps the image aspect ratio */
-      border-radius: 8px;
+      object-fit: cover;
     }
 
-    /* Media query for small screens */
     @media (max-width: 768px) {
-      .mySlides img {
-        max-height: 150px;
+      .mySlides {
+        height: 150px;
       }
     }
 
-    /* Existing Styles */
+    /* --- Loader --- */
     #loader {
       display: none;
       text-align: center;
@@ -49,6 +47,7 @@
       color: #555;
     }
 
+    /* --- Popup Banner --- */
     .popup-banner {
       display: none;
       position: fixed;
@@ -79,6 +78,7 @@
       cursor: pointer;
     }
 
+    /* --- Table --- */
     table {
       width: 100%;
       border-collapse: collapse;
@@ -86,17 +86,17 @@
 
     th, td {
       padding: 10px;
-      text-align: left;
       border: 1px solid #ddd;
     }
 
     th {
       background-color: #f2f2f2;
+      text-align: left;
     }
   </style>
 </head>
-<body>
 
+<body>
   <header>
     <div class="header-content">
       <img src="U.EP Logo.png" alt="UEP Logo" class="logo" />
@@ -105,6 +105,7 @@
   </header>
 
   <div class="container">
+    <!-- Search Section -->
     <div class="search-section">
       <h2>Check your ID Request</h2>
       <div class="user-input">
@@ -114,8 +115,10 @@
       </div>
     </div>
 
+    <!-- Loader -->
     <div id="loader">Searching...</div>
 
+    <!-- Results Section -->
     <div class="results-section">
       <h2>Search Results</h2>
       <table>
@@ -134,43 +137,29 @@
 
     <!-- Slideshow Section -->
     <div class="slideshow-container">
-      <div class="mySlides">
-        <img src="step1.png" alt="Step 1: Register" />
-      </div>
-
-      <div class="mySlides">
-        <img src="Step2.jpg" alt="Step 2: Submit Requirements" />
-      </div>
-
-      <div class="mySlides">
-        <img src="step3.jpg" alt="Step 3: Wait for Processing" />
-      </div>
-
-      <div class="mySlides">
-        <img src="step4.jpg" alt="Step 4: Claim Your ID" />
-      </div>
+      <div class="mySlides"><img src="step1.png" alt="Step 1: Register" /></div>
+      <div class="mySlides"><img src="Step2.jpg" alt="Step 2: Submit Requirements" /></div>
+      <div class="mySlides"><img src="step3.jpg" alt="Step 3: Wait for Processing" /></div>
+      <div class="mySlides"><img src="step4.jpg" alt="Step 4: Claim Your ID" /></div>
     </div>
-
   </div>
 
-  <!-- Popup -->
+  <!-- Popup Banner -->
   <div id="popupBanner" class="popup-banner">
     <div class="popup-content">
       <button class="close-btn" onclick="closePopup()">×</button>
       <h2>Welcome to the <span style="color: navy;">ID Production Monitoring System</span></h2>
       <p>
-        This system allows students to check the status of their ID requests.
-        <br /><br />
+        This system allows students to check the status of their ID requests.<br /><br />
         <strong>Guidelines:</strong>
         <ul>
           <li>✅ Enter your full name to search for your ID status.</li>
           <li>📋 Status can be <b>Ready to Claim</b>, or <b>Claimed</b>.</li>
           <li>📞 If your name is not found, contact the ID Production Office.</li>
-        </ul>
-        <br />
+        </ul><br />
         <strong style="color: darkblue;">Office Hours:</strong><br />
-        <span>Morning: <b>8:00 AM to 11:30 AM</b></span><br />
-        <span>Afternoon: <b>1:00 PM to 5:00 PM</b></span><br /><hr /><br />
+        Morning: <b>8:00 AM to 11:30 AM</b><br />
+        Afternoon: <b>1:00 PM to 5:00 PM</b><br /><hr /><br />
         <li style="color: darkgoldenrod;">
           <strong>⚠ Note:</strong> If your name is not listed and you submitted your requirements in <b>2024</b>, please <u>resubmit your requirements</u> at the ID Production Office. Thank you!
         </li>
@@ -182,26 +171,20 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.2/xlsx.full.min.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.4.2/firebase.js"></script>
   <script src="fireConfig.js"></script>
-  <script src="searchScript.js"></script>
-
   <script>
-    // Show popup on page load
-    window.onload = function () {
+    // Show popup on load
+    window.onload = () => {
       document.getElementById("popupBanner").style.display = "flex";
     };
 
-    // Close popup
     function closePopup() {
       document.getElementById("popupBanner").style.display = "none";
     }
 
-    // Function to show/hide the loader
     function toggleLoader(show) {
-      const loader = document.getElementById("loader");
-      loader.style.display = show ? "block" : "none";
+      document.getElementById("loader").style.display = show ? "block" : "none";
     }
 
-    // Function to display students (only name, course, and status for privacy)
     function displayStudents(students) {
       const tableBody = document.getElementById("studentTableBody");
       tableBody.innerHTML = "";
@@ -209,7 +192,7 @@
       if (students && Object.keys(students).length > 0) {
         Object.values(students).forEach(student => {
           const row = tableBody.insertRow();
-          row.innerHTML = ` 
+          row.innerHTML = `
             <td>${student.name || "N/A"}</td>
             <td>${student.course || "N/A"}</td>
             <td>${student.status || "Pending"}</td>
@@ -222,7 +205,6 @@
       }
     }
 
-    // Search function
     function searchStudents(keyword) {
       toggleLoader(true);
       firebase.database().ref("student").once("value")
@@ -245,55 +227,43 @@
         })
         .catch(error => {
           console.error("Search failed:", error);
-          const tableBody = document.getElementById("studentTableBody");
-          tableBody.innerHTML = `
+          document.getElementById("studentTableBody").innerHTML = `
             <tr><td colspan="3">Error loading student data.</td></tr>
           `;
           toggleLoader(false);
         });
     }
 
-    document.addEventListener("DOMContentLoaded", function () {
-      const tableBody = document.getElementById("studentTableBody");
+    document.addEventListener("DOMContentLoaded", () => {
       const searchInput = document.getElementById("searchName");
-      const clearButton = document.getElementById("clear");
+      const searchBtn = document.getElementById("search");
+      const clearBtn = document.getElementById("clear");
+      const tableBody = document.getElementById("studentTableBody");
 
-      // Privacy message on load
-      tableBody.innerHTML = `
-        <tr><td colspan="3">Student list is hidden for privacy. Use the search bar to find a student.</td></tr>
-      `;
-
-      // Live search
-      searchInput.addEventListener("input", function () {
-        const keyword = this.value.trim();
-        if (keyword === "") {
-          tableBody.innerHTML = `
-            <tr><td colspan="3">Student list is hidden for privacy. Use the search bar to find a student.</td></tr>
-          `;
-        } else {
-          searchStudents(keyword);
-        }
-      });
-
-      // Manual search
-      document.getElementById("search").addEventListener("click", function () {
-        const keyword = searchInput.value.trim();
-        if (keyword === "") {
-          tableBody.innerHTML = `
-            <tr><td colspan="3">Student list is hidden for privacy. Use the search bar to find a student.</td></tr>
-          `;
-        } else {
-          searchStudents(keyword);
-        }
-      });
-
-      // Clear button
-      clearButton.addEventListener("click", function () {
-        searchInput.value = "";
+      const resetTable = () => {
         tableBody.innerHTML = `
           <tr><td colspan="3">Student list is hidden for privacy. Use the search bar to find a student.</td></tr>
         `;
+      };
+
+      resetTable();
+
+      searchBtn.addEventListener("click", () => {
+        const keyword = searchInput.value.trim();
+        if (keyword) searchStudents(keyword);
+        else resetTable();
       });
+
+      clearBtn.addEventListener("click", () => {
+        searchInput.value = "";
+        resetTable();
+      });
+
+      // searchInput.addEventListener("input", () => {
+      //   const keyword = searchInput.value.trim();
+      //   if (keyword) searchStudents(keyword);
+      //   else resetTable();
+      // });
     });
   </script>
 </body>
