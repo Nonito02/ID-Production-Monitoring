@@ -1,7 +1,7 @@
 // Function to display a single student or show message if not found
 function displayStudent(student) {
   const tableBody = document.getElementById("studentTableBody");
-  tableBody.innerHTML = "";
+  tableBody.innerHTML = ""; // Clear existing rows
 
   if (student) {
     const row = tableBody.insertRow();
@@ -31,7 +31,7 @@ function clearTable() {
 // Function to search by exact name only
 function searchExactName(name) {
   if (!name.trim()) {
-    clearTable(); // Show nothing
+    clearTable(); // Show nothing if input is empty
     return;
   }
 
@@ -45,16 +45,16 @@ function searchExactName(name) {
           const student = students[key];
           if (student.name && student.name.trim().toLowerCase() === name.trim().toLowerCase()) {
             exactMatch = student;
-            break;
+            break; // Stop after finding the first exact match
           }
         }
       }
 
-      displayStudent(exactMatch);
+      displayStudent(exactMatch); // Display the student if found
     })
     .catch(error => {
       console.error("Search failed:", error);
-      clearTable();
+      clearTable(); // Clear table on error
     });
 }
 
