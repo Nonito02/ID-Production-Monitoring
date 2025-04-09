@@ -44,13 +44,13 @@ function searchExactName(name) {
         for (const key in students) {
           const student = students[key];
           if (student.name && student.name.trim().toLowerCase() === name.trim().toLowerCase()) {
-            exactMatch = student;
-            break; // Stop after finding the first exact match
+            exactMatch = student; // Set first match
+            break; // Stop after the first match
           }
         }
       }
 
-      displayStudent(exactMatch); // Display the student if found
+      displayStudent(exactMatch); // Display the first student found
     })
     .catch(error => {
       console.error("Search failed:", error);
