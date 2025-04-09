@@ -8,32 +8,41 @@
   <link rel="stylesheet" href="style.css" />
   <style>
 
-    .mySlides img {
-  width: 100%;
-  height: auto;
-  max-height: 300px; /* limit the image height */
-  object-fit: contain;
-  border-radius: 8px;
+  .slideshow-container {
+  display: flex;
+  overflow-x: auto;
+  margin-top: 30px;
+  padding: 10px;
+  border-radius: 12px;
+  gap: 10px; /* Adds space between slides */
 }
 
-/* Media query for small screens */
+.mySlides {
+  flex: 0 0 auto;
+  width: 100%; /* Make the slides take full container width */
+  max-width: 300px; /* Max width for slides */
+  height: auto; /* Allow height to adjust based on content */
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+/* Ensure images scale appropriately */
+.mySlides img {
+  width: 100%; /* Make image take full width of the slide */
+  height: auto; /* Allow height to adjust proportionally */
+  object-fit: cover; /* Maintain aspect ratio and cover the container */
+}
+
+/* --- Responsive Design --- */
 @media (max-width: 768px) {
-  .mySlides img {
-    max-height: 150px;
+  .mySlides {
+    max-width: 100%; /* Full width on smaller screens */
+    height: auto; /* Allow height to scale */
   }
 
-  .slideshow-text {
-    font-size: 16px;
-    padding: 6px;
-  }
-
-  .popup-content {
-    width: 95%;
-    padding: 1rem;
-  }
-
-  .popup-content h2 {
-    font-size: 20px;
+  .slideshow-container {
+    flex-wrap: wrap; /* Stack slides on smaller screens */
+    justify-content: center; /* Center slides */
   }
 }
 
