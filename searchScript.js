@@ -12,7 +12,7 @@ function displayStudent(student) {
       <td>${student.status || "Pending"}</td>
     `;
   } else {
-    // If no student is found, display the "Visit the ID Production" message and show an image
+    // If no student is found, display the message and image
     tableBody.innerHTML = `
       <tr><td colspan="3">
         <p>Visit the ID Production</p>
@@ -24,14 +24,8 @@ function displayStudent(student) {
 
 // Load and display all students
 function loadAllStudents() {
-  firebase.database().ref("student").once("value")
-    .then(snapshot => {
-      const students = snapshot.val();
-      displayStudent(null); // Clear display if loading all students (optional)
-    })
-    .catch(error => {
-      console.error("Failed to load students:", error);
-    });
+  const tableBody = document.getElementById("studentTableBody");
+  tableBody.innerHTML = ""; // Clear the table if loading all students (optional)
 }
 
 // Search function (works with any keyword in name, course, or status)
@@ -66,18 +60,12 @@ function searchStudents(keyword) {
 
 // Live search while typing
 document.addEventListener("DOMContentLoaded", function () {
-  // Display all students on page load (optional)
-  loadAllStudents();
-
-  // Show popup
-  document.getElementById("popupBanner").style.display = "flex";
-
   // Handle live search input
   const searchInput = document.getElementById("searchName");
   searchInput.addEventListener("input", function () {
     const keyword = this.value.trim();
     if (keyword === "") {
-      displayStudent(null); // If no keyword, clear the display
+      loadAllStudents(); // Clear the display if no search term
     } else {
       searchStudents(keyword); // Search and display the result
     }
@@ -87,7 +75,7 @@ document.addEventListener("DOMContentLoaded", function () {
   document.getElementById("search").addEventListener("click", function () {
     const keyword = searchInput.value.trim();
     if (keyword === "") {
-      displayStudent(null); // If no keyword, clear the display
+      loadAllStudents(); // Clear the display if no search term
     } else {
       searchStudents(keyword); // Search and display the result
     }
