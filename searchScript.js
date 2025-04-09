@@ -1,23 +1,4 @@
-// Function to display students
-function displayStudents(students) {
-  const tableBody = document.getElementById("studentTableBody");
-  tableBody.innerHTML = "";
 
-  if (students && Object.keys(students).length > 0) {
-    Object.values(students).forEach(student => {
-      const row = tableBody.insertRow();
-      row.innerHTML = `
-        <td>${student.name || "N/A"}</td>
-        <td>${student.course || "N/A"}</td>
-        <td>${student.status || "Pending"}</td>
-      `;
-    });
-  } else {
-    tableBody.innerHTML = `
-      <tr><td colspan="3">No student records found.</td></tr>
-    `;
-  }
-}
 
 // Load and display all students
 function loadAllStudents() {
