@@ -236,12 +236,12 @@
       tableBody.innerHTML = "";
 
       if (students && Object.keys(students).length > 0) {
-        Object.values(students).forEach(student => {
+        Object.values(students).forEach(students => {
           const row = tableBody.insertRow();
           row.innerHTML = ` 
-            <td>${student.name || "N/A"}</td>
-            <td>${student.course || "N/A"}</td>
-            <td>${student.status || "Pending"}</td>
+            <td>${students.name || "N/A"}</td>
+            <td>${students.course || "N/A"}</td>
+            <td>${students.status || "Pending"}</td>
           `;
         });
       } else {
@@ -274,7 +274,7 @@
     // Search function
     function searchStudents(keyword) {
       toggleLoader(true);
-      firebase.database().ref("student").once("value")
+      firebase.database().ref("students").once("value")
         .then(snapshot => {
           const students = snapshot.val();
           const results = {};
@@ -282,9 +282,9 @@
           if (students) {
             Object.keys(students).forEach(key => {
               const student = students[key];
-              const searchString = `${student.name} ${student.course} ${student.status}`.toLowerCase();
+              const searchString = `${students.name} ${students.course} ${students.status}`.toLowerCase();
               if (searchString.includes(keyword.toLowerCase())) {
-                results[key] = student;
+                results[key] = students;
               }
             });
           }
@@ -294,7 +294,7 @@
         })
         .catch(error => {
           console.error("Search failed:", error);
-          const tableBody = document.getElementById("studentTableBody");
+          const tableBody = document.getElementById("studentsTableBody");
           tableBody.innerHTML = `
             <tr><td colspan="3">Error loading student data.</td></tr>
           `;
