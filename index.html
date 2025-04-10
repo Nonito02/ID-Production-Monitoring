@@ -8,36 +8,84 @@
   <link rel="stylesheet" href="style.css" />
   <style>
 
-    .mySlides img {
-      width: 100%;
-      height: auto;
-      max-height: 300px; /* limit the image height */
-      object-fit: contain;
-      border-radius: 8px;
+    /* General reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
 
-    /* Media query for small screens */
-    @media (max-width: 768px) {
-      .mySlides img {
-        max-height: 150px;
-      }
-
-      .slideshow-text {
-        font-size: 16px;
-        padding: 6px;
-      }
-
-      .popup-content {
-        width: 95%;
-        padding: 1rem;
-      }
-
-      .popup-content h2 {
-        font-size: 20px;
-      }
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      color: #333;
     }
 
-    /* Existing Styles */
+    /* Header styles */
+    header {
+      background-color: navy;
+      color: white;
+      padding: 15px 0;
+      text-align: center;
+    }
+
+    header .header-content {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    header .logo {
+      width: 50px;
+      margin-right: 20px;
+    }
+
+    header h1 {
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    /* Container styles */
+    .container {
+      padding: 20px;
+    }
+
+    /* Search Section */
+    .search-section {
+      margin-bottom: 30px;
+    }
+
+    .search-section h2 {
+      font-size: 20px;
+      color: #333;
+    }
+
+    .user-input {
+      display: flex;
+      gap: 10px;
+    }
+
+    .user-input input {
+      padding: 8px;
+      width: 300px;
+      border-radius: 4px;
+      border: 1px solid #ddd;
+    }
+
+    .user-input button {
+      padding: 8px 16px;
+      background-color: navy;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .user-input button:hover {
+      background-color: darkblue;
+    }
+
+    /* Loader */
     #loader {
       display: none;
       text-align: center;
@@ -46,34 +94,14 @@
       color: #555;
     }
 
-    .popup-banner {
-      display: none;
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(0, 0, 0, 0.6);
-      justify-content: center;
-      align-items: center;
-      z-index: 999;
+    /* Results Section */
+    .results-section {
+      margin-top: 30px;
     }
 
-    .popup-content {
-      background: white;
-      padding: 2rem;
-      border-radius: 8px;
-      width: 90%;
-      max-width: 600px;
-      position: relative;
-    }
-
-    .close-btn {
-      position: absolute;
-      top: 10px;
-      right: 15px;
-      font-size: 24px;
-      background: none;
-      border: none;
-      cursor: pointer;
+    .results-section h2 {
+      font-size: 20px;
+      margin-bottom: 10px;
     }
 
     table {
@@ -116,6 +144,73 @@
       background-color: rgba(0, 0, 0, 0.5);
       padding: 10px;
     }
+
+    /* Popup Banner */
+    .popup-banner {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      justify-content: center;
+      align-items: center;
+      z-index: 999;
+    }
+
+    .popup-content {
+      background: white;
+      padding: 2rem;
+      border-radius: 8px;
+      width: 90%;
+      max-width: 600px;
+      position: relative;
+    }
+
+    .popup-content h2 {
+      font-size: 22px;
+      color: navy;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      font-size: 24px;
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+
+    .popup-content ul {
+      list-style: none;
+      margin-top: 15px;
+    }
+
+    .popup-content ul li {
+      font-size: 16px;
+      color: #333;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .mySlides img {
+        max-height: 150px;
+      }
+
+      .slideshow-text {
+        font-size: 16px;
+        padding: 5px;
+      }
+
+      .popup-content {
+        width: 95%;
+        padding: 1rem;
+      }
+
+      .popup-content h2 {
+        font-size: 20px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -128,6 +223,7 @@
   </header>
 
   <div class="container">
+    <!-- Search Section -->
     <div class="search-section">
       <h2>Check your ID Request</h2>
       <div class="user-input">
@@ -139,6 +235,7 @@
 
     <div id="loader">Searching...</div>
 
+    <!-- Results Section -->
     <div class="results-section">
       <h2>Search Results</h2>
       <table>
@@ -180,7 +277,7 @@
 
   </div>
 
-  <!-- Popup -->
+  <!-- Popup Banner -->
   <div id="popupBanner" class="popup-banner">
     <div class="popup-content">
       <button class="close-btn" onclick="closePopup()">×</button>
@@ -222,33 +319,6 @@
       document.getElementById("popupBanner").style.display = "none";
     }
 
-    // Function to show/hide the loader
-    function toggleLoader(show) {
-      const loader = document.getElementById("loader");
-      loader.style.display = show ? "block" : "none";
-    }
-
-    // Function to display students (only name, course, and status for privacy)
-    function displayStudents(students) {
-      const tableBody = document.getElementById("studentsTableBody");
-      tableBody.innerHTML = "";
-
-      if (students && Object.keys(students).length > 0) {
-        Object.values(students).forEach(student => {
-          const row = tableBody.insertRow();
-          row.innerHTML = ` 
-            <td>${student.name || "N/A"}</td>
-            <td>${student.course || "N/A"}</td>
-            <td>${student.status || "Pending"}</td>
-          `;
-        });
-      } else {
-        tableBody.innerHTML = `
-          <tr><td colspan="3">Your name was not found. Please <strong>resubmit your requirements</strong> at the ID Production Office.</td></tr>
-        `;
-      }
-    }
-
     // Slideshow functionality
     let slideIndex = 0;
 
@@ -271,80 +341,45 @@
 
     // Search function
     function searchStudents(keyword) {
-      toggleLoader(true);
-      firebase.database().ref("students").once("value")
-        .then(snapshot => {
-          const students = snapshot.val();
-          const results = {};
+      const loader = document.getElementById("loader");
+      loader.style.display = "block";
+      // Simulate a delay for searching
+      setTimeout(() => {
+        loader.style.display = "none";
+        // Here, you'll fetch data from the database or API
+        // The data below is just sample data
+        const students = [
+          { name: "John Doe", course: "Engineering", status: "Ready to Claim" },
+          { name: "Jane Smith", course: "Nursing", status: "Claimed" },
+        ];
 
-          if (students) {
-            Object.keys(students).forEach(key => {
-              const student = students[key];
-              const searchString = `${student.name} ${student.course} ${student.status}`.toLowerCase();
-              if (searchString.includes(keyword.toLowerCase())) {
-                results[key] = student;
-              }
-            });
-          }
+        const filtered = students.filter(student => student.name.toLowerCase().includes(keyword.toLowerCase()));
 
-          displayStudents(results);
-          toggleLoader(false);
-        })
-        .catch(error => {
-          console.error("Search failed:", error);
-          const tableBody = document.getElementById("studentsTableBody");
-          tableBody.innerHTML = `
-            <tr><td colspan="3">Error loading student data.</td></tr>
-          `;
-          toggleLoader(false);
+        // Display results
+        const tableBody = document.getElementById("studentsTableBody");
+        tableBody.innerHTML = "";
+        filtered.forEach(student => {
+          const row = `<tr>
+                        <td>${student.name}</td>
+                        <td>${student.course}</td>
+                        <td>${student.status}</td>
+                      </tr>`;
+          tableBody.innerHTML += row;
         });
+      }, 1500);
     }
 
-    document.addEventListener("DOMContentLoaded", function () {
-      const tableBody = document.getElementById("studentsTableBody");
-      const searchInput = document.getElementById("searchName");
-      const clearButton = document.getElementById("clear");
+    // Event listeners
+    document.getElementById("search").addEventListener("click", function () {
+      const searchValue = document.getElementById("searchName").value;
+      searchStudents(searchValue);
+    });
 
-      // Privacy message on load
-      tableBody.innerHTML = `
-        <tr><td colspan="3">Student list is hidden for privacy. Use the search bar to find a student.</td></tr>
-      `;
-
-      // Show popup
-      document.getElementById("popupBanner").style.display = "flex";
-
-      // Live search
-      searchInput.addEventListener("input", function () {
-        const keyword = this.value.trim();
-        if (keyword === "") {
-          tableBody.innerHTML = `
-            <tr><td colspan="3">Student list is hidden for privacy. Use the search bar to find a student.</td></tr>
-          `;
-        } else {
-          searchStudents(keyword);
-        }
-      });
-
-      // Manual search
-      document.getElementById("search").addEventListener("click", function () {
-        const keyword = searchInput.value.trim();
-        if (keyword === "") {
-          tableBody.innerHTML = `
-            <tr><td colspan="3">Student list is hidden for privacy. Use the search bar to find a student.</td></tr>
-          `;
-        } else {
-          searchStudents(keyword);
-        }
-      });
-
-      // Clear button
-      clearButton.addEventListener("click", function () {
-        searchInput.value = "";
-        tableBody.innerHTML = `
-          <tr><td colspan="3">Student list is hidden for privacy. Use the search bar to find a student.</td></tr>
-        `;
-      });
+    document.getElementById("clear").addEventListener("click", function () {
+      document.getElementById("searchName").value = "";
+      document.getElementById("studentsTableBody").innerHTML = "";
     });
   </script>
+
 </body>
 </html>
