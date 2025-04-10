@@ -7,33 +7,35 @@
   <title>ID Production Monitoring</title>
   <link rel="stylesheet" href="style.css" />
   <style>
+
     .mySlides img {
-      width: 100%;
-      height: auto;
-      max-height: 300px; /* limit the image height */
-      object-fit: contain;
-      border-radius: 8px;
-    }
+  width: 100%;
+  height: auto;
+  max-height: 300px; /* limit the image height */
+  object-fit: contain;
+  border-radius: 8px;
+}
 
-    @media (max-width: 768px) {
-      .mySlides img {
-        max-height: 150px;
-      }
+/* Media query for small screens */
+@media (max-width: 768px) {
+  .mySlides img {
+    max-height: 150px;
+  }
 
-      .slideshow-text {
-        font-size: 16px;
-        padding: 6px;
-      }
+  .slideshow-text {
+    font-size: 16px;
+    padding: 6px;
+  }
 
-      .popup-content {
-        width: 95%;
-        padding: 1rem;
-      }
+  .popup-content {
+    width: 95%;
+    padding: 1rem;
+  }
 
-      .popup-content h2 {
-        font-size: 20px;
-      }
-    }
+  .popup-content h2 {
+    font-size: 20px;
+  }
+}
 
     /* Existing Styles */
     #loader {
@@ -135,9 +137,9 @@
       </div>
     </div>
 
-    <div id="loader" class="spinner-grow" role="status">
-      <span class="visually-hidden">Loading...</span>
-    </div>
+   <div class="spinner-grow" role="status">
+  <span class="visually-hidden">Loading...</span>
+</div>
 
     <div class="results-section">
       <h2>Search Results</h2>
@@ -159,20 +161,25 @@
     <div class="slideshow-container">
       <div class="mySlides fade">
         <img src="step1.png" alt="Step 1: Register" />
+<!--         <div class="slideshow-text">Step 1: Register for an ID</div> -->
       </div>
 
       <div class="mySlides fade">
         <img src="Step2.jpg" alt="Step 2: Submit Requirements" />
+<!--         <div class="slideshow-text">Step 2: Submit Requirements</div> -->
       </div>
 
       <div class="mySlides fade">
         <img src="step3.jpg" alt="Step 3: Wait for Processing" />
+<!--         <div class="slideshow-text">Step 3: Wait for Processing</div> -->
       </div>
 
       <div class="mySlides fade">
         <img src="step4.jpg" alt="Step 4: Claim Your ID" />
+<!--         <div class="slideshow-text">Step 4: Claim Your ID</div> -->
       </div>
     </div>
+
   </div>
 
   <!-- Popup -->
@@ -246,40 +253,99 @@
 
     // Slideshow functionality
     let slideIndex = 0;
+
     function showSlides() {
-      const slides = document.getElementsByClassName("mySlides");
+      let slides = document.getElementsByClassName("mySlides");
       for (let i = 0; i < slides.length; i++) {
         slides[i].style.display = "none";
       }
+
       slideIndex++;
-      if (slideIndex > slides.length) { slideIndex = 1 }
-      slides[slideIndex - 1].style.display = "block";
-      setTimeout(showSlides, 2000); // Change image every 2 seconds
-    }
-    showSlides();
-
-    // Search for students in Firebase database
-    document.getElementById("search").addEventListener("click", function () {
-      const keyword = document.getElementById("searchName").value.trim();
-      if (keyword) {
-        toggleLoader(true);
-        const dbRef = firebase.database().ref("students");
-        dbRef.orderByChild("name").equalTo(keyword).once("value")
-          .then(snapshot => {
-            toggleLoader(false);
-            displayStudents(snapshot.val());
-          })
-          .catch(err => {
-            toggleLoader(false);
-            alert("Error fetching data from Firebase");
-          });
+      if (slideIndex > slides.length) {
+        slideIndex = 1;
       }
-    });
 
-    // Clear search
-    document.getElementById("clear").addEventListener("click", function () {
-      document.getElementById("searchName").value = "";
-      document.getElementById("studentTableBody").innerHTML = "";
+      slides[slideIndex - 1].style.display = "block";
+      setTimeout(showSlides, 3000); // Change image every 5 seconds
+    }
+
+    showSlides(); // Start the slideshow
+
+    // Search function
+    function searchStudents(keyword) {
+      toggleLoader(true);
+      firebase.database().ref("student").once("value")
+        .then(snapshot => {
+          const students = snapshot.val();
+          const results = {};
+
+          if (students) {
+            Object.keys(students).forEach(key => {
+              const student = students[key];
+              const searchString = `${student.name} ${student.course} ${student.status}`.toLowerCase();
+              if (searchString.includes(keyword.toLowerCase())) {
+                results[key] = student;
+              }
+            });
+          }
+
+          displayStudents(results);
+          toggleLoader(false);
+        })
+        .catch(error => {
+          console.error("Search failed:", error);
+          const tableBody = document.getElementById("studentTableBody");
+          tableBody.innerHTML = `
+            <tr><td colspan="3">Error loading student data.</td></tr>
+          `;
+          toggleLoader(false);
+        });
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+      const tableBody = document.getElementById("studentTableBody");
+      const searchInput = document.getElementById("searchName");
+      const clearButton = document.getElementById("clear");
+
+      // Privacy message on load
+      tableBody.innerHTML = `
+        <tr><td colspan="3">Student list is hidden for privacy. Use the search bar to find a student.</td></tr>
+      `;
+
+      // Show popup
+      document.getElementById("popupBanner").style.display = "flex";
+
+      // Live search
+      searchInput.addEventListener("input", function () {
+        const keyword = this.value.trim();
+        if (keyword === "") {
+          tableBody.innerHTML = `
+            <tr><td colspan="3">Student list is hidden for privacy. Use the search bar to find a student.</td></tr>
+          `;
+        } else {
+          searchStudents(keyword);
+        }
+      });
+
+      // Manual search
+      document.getElementById("search").addEventListener("click", function () {
+        const keyword = searchInput.value.trim();
+        if (keyword === "") {
+          tableBody.innerHTML = `
+            <tr><td colspan="3">Student list is hidden for privacy. Use the search bar to find a student.</td></tr>
+          `;
+        } else {
+          searchStudents(keyword);
+        }
+      });
+
+      // Clear button
+      clearButton.addEventListener("click", function () {
+        searchInput.value = "";
+        tableBody.innerHTML = `
+          <tr><td colspan="3">Student list is hidden for privacy. Use the search bar to find a student.</td></tr>
+        `;
+      });
     });
   </script>
 </body>
