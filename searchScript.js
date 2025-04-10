@@ -42,7 +42,7 @@ function searchExactName(name) {
 
       if (students) {
         for (const key in students) {
-          const student = students[key];
+          const students = students[key];
 
           if (students.name && students.name.trim().toLowerCase() === name.trim().toLowerCase()) {
             exactMatch = students; // Set first match
