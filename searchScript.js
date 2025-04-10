@@ -1,14 +1,15 @@
 // Function to display a single student or show message if not found
-function displayStudent(students) {
-  const tableBody = document.getElementById("studentsTableBody");
+
+function displayStudent(student) {
+  const tableBody = document.getElementById("studentTableBody");
   tableBody.innerHTML = ""; // Clear existing rows
 
-  if (students) {
+  if (student) {
     const row = tableBody.insertRow();
     row.innerHTML = `
-      <td>${students.name || "N/A"}</td>
-      <td>${students.course || "N/A"}</td>
-      <td>${students.status || "Pending"}</td>
+      <td>${student.name || "N/A"}</td>
+      <td>${student.course || "N/A"}</td>
+      <td>${student.status || "Pending"}</td>
     `;
   } else {
     tableBody.innerHTML = `
@@ -35,23 +36,23 @@ function searchExactName(name) {
     return;
   }
 
-  firebase.database().ref("students").once("value")
+  firebase.database().ref("student").once("value")
     .then(snapshot => {
       const students = snapshot.val();
       let exactMatch = null;
 
       if (students) {
         for (const key in students) {
-          const students = students[key];
-
-          if (students.name && students.name.trim().toLowerCase() === name.trim().toLowerCase()) {
-            exactMatch = students; // Set first match
+          const student = students[key];
+          // Check for exact match on name (case-insensitive)
+          if (student.name && student.name.trim().toLowerCase() === name.trim().toLowerCase()) {
+            exactMatch = student; // Set first match
             break; // Stop after the first match
           }
         }
       }
 
-      displayStudent(exactMatch); // Display the first student found
+      displayStudent(exactMatch); // Display the first student found or null if not found
     })
     .catch(error => {
       console.error("Search failed:", error);
