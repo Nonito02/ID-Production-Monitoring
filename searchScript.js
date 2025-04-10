@@ -1,6 +1,12 @@
 // Function to display a single student or show message if not found
 function displayStudent(student) {
   const tableBody = document.getElementById("studentsTableBody");
+  
+  if (!tableBody) {
+    console.error("Table body element not found!");
+    return; // Exit if the table body doesn't exist
+  }
+
   tableBody.innerHTML = ""; // Clear existing rows
 
   if (student) {
@@ -25,7 +31,11 @@ function displayStudent(student) {
 // Clear table content
 function clearTable() {
   const tableBody = document.getElementById("studentsTableBody");
-  tableBody.innerHTML = "";
+  if (tableBody) {
+    tableBody.innerHTML = ""; // Clear content if tableBody exists
+  } else {
+    console.error("Table body element not found!");
+  }
 }
 
 // Function to search by exact name only
@@ -62,6 +72,11 @@ function searchExactName(name) {
 // DOM ready
 document.addEventListener("DOMContentLoaded", function () {
   const searchInput = document.getElementById("searchName");
+  
+  if (!searchInput) {
+    console.error("Search input element not found!");
+    return;
+  }
 
   // Live search with exact match
   searchInput.addEventListener("input", function () {
@@ -69,7 +84,12 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   // Optional manual search button
-  document.getElementById("search").addEventListener("click", function () {
-    searchExactName(searchInput.value);
-  });
+  const searchButton = document.getElementById("search");
+  if (searchButton) {
+    searchButton.addEventListener("click", function () {
+      searchExactName(searchInput.value);
+    });
+  } else {
+    console.error("Search button element not found!");
+  }
 });
