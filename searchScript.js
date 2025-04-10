@@ -1,14 +1,14 @@
 // Function to display a single student or show message if not found
-function displayStudent(student) {
-  const tableBody = document.getElementById("studentTableBody");
+function displayStudent(students) {
+  const tableBody = document.getElementById("studentsTableBody");
   tableBody.innerHTML = ""; // Clear existing rows
 
-  if (student) {
+  if (students) {
     const row = tableBody.insertRow();
     row.innerHTML = `
-      <td>${student.name || "N/A"}</td>
-      <td>${student.course || "N/A"}</td>
-      <td>${student.status || "Pending"}</td>
+      <td>${students.name || "N/A"}</td>
+      <td>${students.course || "N/A"}</td>
+      <td>${students.status || "Pending"}</td>
     `;
   } else {
     tableBody.innerHTML = `
@@ -35,7 +35,7 @@ function searchExactName(name) {
     return;
   }
 
-  firebase.database().ref("student").once("value")
+  firebase.database().ref("students").once("value")
     .then(snapshot => {
       const students = snapshot.val();
       let exactMatch = null;
@@ -44,8 +44,8 @@ function searchExactName(name) {
         for (const key in students) {
           const student = students[key];
 
-          if (student.name && student.name.trim().toLowerCase() === name.trim().toLowerCase()) {
-            exactMatch = student; // Set first match
+          if (students.name && students.name.trim().toLowerCase() === name.trim().toLowerCase()) {
+            exactMatch = students; // Set first match
             break; // Stop after the first match
           }
         }
