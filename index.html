@@ -9,33 +9,33 @@
   <style>
 
     .mySlides img {
-  width: 100%;
-  height: auto;
-  max-height: 300px; /* limit the image height */
-  object-fit: contain;
-  border-radius: 8px;
-}
+      width: 100%;
+      height: auto;
+      max-height: 300px; /* limit the image height */
+      object-fit: contain;
+      border-radius: 8px;
+    }
 
-/* Media query for small screens */
-@media (max-width: 768px) {
-  .mySlides img {
-    max-height: 150px;
-  }
+    /* Media query for small screens */
+    @media (max-width: 768px) {
+      .mySlides img {
+        max-height: 150px;
+      }
 
-  .slideshow-text {
-    font-size: 16px;
-    padding: 6px;
-  }
+      .slideshow-text {
+        font-size: 16px;
+        padding: 6px;
+      }
 
-  .popup-content {
-    width: 95%;
-    padding: 1rem;
-  }
+      .popup-content {
+        width: 95%;
+        padding: 1rem;
+      }
 
-  .popup-content h2 {
-    font-size: 20px;
-  }
-}
+      .popup-content h2 {
+        font-size: 20px;
+      }
+    }
 
     /* Existing Styles */
     #loader {
@@ -149,7 +149,7 @@
             <th>Status</th>
           </tr>
         </thead>
-        <tbody id="studentTableBody">
+        <tbody id="studentsTableBody">
           <tr><td colspan="3">Student list is hidden for privacy. Use the search bar to find a student.</td></tr>
         </tbody>
       </table>
@@ -230,7 +230,7 @@
 
     // Function to display students (only name, course, and status for privacy)
     function displayStudents(students) {
-      const tableBody = document.getElementById("studentTableBody");
+      const tableBody = document.getElementById("studentsTableBody");
       tableBody.innerHTML = "";
 
       if (students && Object.keys(students).length > 0) {
@@ -272,7 +272,7 @@
     // Search function
     function searchStudents(keyword) {
       toggleLoader(true);
-      firebase.database().ref("student").once("value")
+      firebase.database().ref("students").once("value")
         .then(snapshot => {
           const students = snapshot.val();
           const results = {};
@@ -292,7 +292,7 @@
         })
         .catch(error => {
           console.error("Search failed:", error);
-          const tableBody = document.getElementById("studentTableBody");
+          const tableBody = document.getElementById("studentsTableBody");
           tableBody.innerHTML = `
             <tr><td colspan="3">Error loading student data.</td></tr>
           `;
@@ -301,7 +301,7 @@
     }
 
     document.addEventListener("DOMContentLoaded", function () {
-      const tableBody = document.getElementById("studentTableBody");
+      const tableBody = document.getElementById("studentsTableBody");
       const searchInput = document.getElementById("searchName");
       const clearButton = document.getElementById("clear");
 
