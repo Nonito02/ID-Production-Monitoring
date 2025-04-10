@@ -137,7 +137,9 @@
       </div>
     </div>
 
-    <div id="loader">Searching...</div>
+   <div class="spinner-grow" role="status">
+  <span class="visually-hidden">Loading...</span>
+</div>
 
     <div class="results-section">
       <h2>Search Results</h2>
@@ -159,22 +161,22 @@
     <div class="slideshow-container">
       <div class="mySlides fade">
         <img src="step1.png" alt="Step 1: Register" />
-        <div class="slideshow-text">Step 1: Register for an ID</div>
+<!--         <div class="slideshow-text">Step 1: Register for an ID</div> -->
       </div>
 
       <div class="mySlides fade">
         <img src="Step2.jpg" alt="Step 2: Submit Requirements" />
-        <div class="slideshow-text">Step 2: Submit Requirements</div>
+<!--         <div class="slideshow-text">Step 2: Submit Requirements</div> -->
       </div>
 
       <div class="mySlides fade">
         <img src="step3.jpg" alt="Step 3: Wait for Processing" />
-        <div class="slideshow-text">Step 3: Wait for Processing</div>
+<!--         <div class="slideshow-text">Step 3: Wait for Processing</div> -->
       </div>
 
       <div class="mySlides fade">
         <img src="step4.jpg" alt="Step 4: Claim Your ID" />
-        <div class="slideshow-text">Step 4: Claim Your ID</div>
+<!--         <div class="slideshow-text">Step 4: Claim Your ID</div> -->
       </div>
     </div>
 
@@ -234,17 +236,17 @@
       tableBody.innerHTML = "";
 
       if (students && Object.keys(students).length > 0) {
-        Object.values(students).forEach(students => {
+        Object.values(students).forEach(student => {
           const row = tableBody.insertRow();
           row.innerHTML = ` 
-            <td>${students.name || "N/A"}</td>
-            <td>${students.course || "N/A"}</td>
-            <td>${students.status || "Pending"}</td>
+            <td>${student.name || "N/A"}</td>
+            <td>${student.course || "N/A"}</td>
+            <td>${student.status || "Pending"}</td>
           `;
         });
       } else {
         tableBody.innerHTML = `
-          <tr><td colspan="3">Your name was not found. Please <strong>resubmit your requirements</strong> at the ID Production Office.</td></tr>
+          <tr><td colspan="3">Your name was not found. Please <strong>visit the </strong>ID Production Office.</td></tr>
         `;
       }
     }
@@ -272,7 +274,7 @@
     // Search function
     function searchStudents(keyword) {
       toggleLoader(true);
-      firebase.database().ref("students").once("value")
+      firebase.database().ref("student").once("value")
         .then(snapshot => {
           const students = snapshot.val();
           const results = {};
@@ -280,9 +282,9 @@
           if (students) {
             Object.keys(students).forEach(key => {
               const student = students[key];
-              const searchString = `${students.name} ${students.course} ${students.status}`.toLowerCase();
+              const searchString = `${student.name} ${student.course} ${student.status}`.toLowerCase();
               if (searchString.includes(keyword.toLowerCase())) {
-                results[key] = students;
+                results[key] = student;
               }
             });
           }
@@ -294,7 +296,7 @@
           console.error("Search failed:", error);
           const tableBody = document.getElementById("studentTableBody");
           tableBody.innerHTML = `
-            <tr><td colspan="3">Error loading students data.</td></tr>
+            <tr><td colspan="3">Error loading student data.</td></tr>
           `;
           toggleLoader(false);
         });
