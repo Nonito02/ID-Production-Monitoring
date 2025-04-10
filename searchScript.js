@@ -1,12 +1,6 @@
 // Function to display a single student or show message if not found
 function displayStudent(student) {
-  const tableBody = document.getElementById("studentsTableBody");
-  
-  if (!tableBody) {
-    console.error("Table body element not found!");
-    return; // Exit if the table body doesn't exist
-  }
-
+  const tableBody = document.getElementById("studentTableBody");
   tableBody.innerHTML = ""; // Clear existing rows
 
   if (student) {
@@ -30,12 +24,8 @@ function displayStudent(student) {
 
 // Clear table content
 function clearTable() {
-  const tableBody = document.getElementById("studentsTableBody");
-  if (tableBody) {
-    tableBody.innerHTML = ""; // Clear content if tableBody exists
-  } else {
-    console.error("Table body element not found!");
-  }
+  const tableBody = document.getElementById("studentTableBody");
+  tableBody.innerHTML = "";
 }
 
 // Function to search by exact name only
@@ -45,15 +35,15 @@ function searchExactName(name) {
     return;
   }
 
-  firebase.database().ref("students").once("value")
+  firebase.database().ref("student").once("value")
     .then(snapshot => {
       const students = snapshot.val();
       let exactMatch = null;
 
       if (students) {
         for (const key in students) {
-          const student = students[key]; // Changed variable name to 'student' (not 'students')
-          // Check for exact match on name (case-insensitive)
+          const student = students[key];
+
           if (student.name && student.name.trim().toLowerCase() === name.trim().toLowerCase()) {
             exactMatch = student; // Set first match
             break; // Stop after the first match
@@ -61,7 +51,7 @@ function searchExactName(name) {
         }
       }
 
-      displayStudent(exactMatch); // Display the first student found or null if not found
+      displayStudent(exactMatch); // Display the first student found
     })
     .catch(error => {
       console.error("Search failed:", error);
@@ -72,11 +62,6 @@ function searchExactName(name) {
 // DOM ready
 document.addEventListener("DOMContentLoaded", function () {
   const searchInput = document.getElementById("searchName");
-  
-  if (!searchInput) {
-    console.error("Search input element not found!");
-    return;
-  }
 
   // Live search with exact match
   searchInput.addEventListener("input", function () {
@@ -84,12 +69,7 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   // Optional manual search button
-  const searchButton = document.getElementById("search");
-  if (searchButton) {
-    searchButton.addEventListener("click", function () {
-      searchExactName(searchInput.value);
-    });
-  } else {
-    console.error("Search button element not found!");
-  }
+  document.getElementById("search").addEventListener("click", function () {
+    searchExactName(searchInput.value);
+  });
 });
