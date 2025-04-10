@@ -8,10 +8,37 @@
   <link rel="stylesheet" href="style.css" />
   <style>
 
+    /* Light Mode */
+    body.light-mode {
+      background-color: #fff;
+      color: #000;
+    }
+
+    /* Dark Mode */
+    body.dark-mode {
+      background-color: #121212;
+      color: #fff;
+    }
+
+    /* Button for Dark/Light Mode */
+    .mode-toggle {
+      position: absolute;
+      top: 10px;
+      right: 20px;
+      background-color: #444;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      font-size: 16px;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+
+    /* Slideshow image styles */
     .mySlides img {
       width: 100%;
       height: auto;
-      max-height: 300px; /* limit the image height */
+      max-height: 300px;
       object-fit: contain;
       border-radius: 8px;
     }
@@ -118,7 +145,7 @@
     }
   </style>
 </head>
-<body>
+<body class="light-mode">
 
   <header>
     <div class="header-content">
@@ -205,15 +232,31 @@
     </div>
   </div>
 
-  <!-- Scripts -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.2/xlsx.full.min.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.4.2/firebase.js"></script>
-  <script src="fireConfig.js"></script>
-  <script src="searchScript.js"></script>
+  <!-- Mode Toggle Button -->
+  <button class="mode-toggle" onclick="toggleMode()">Toggle Dark/Light Mode</button>
 
+  <!-- Scripts -->
+  <script src="searchScript.js"></script>
   <script>
-    // Show popup on page load
+    // Function to toggle between dark mode and light mode
+    function toggleMode() {
+      const body = document.body;
+      const currentMode = body.classList.contains("dark-mode") ? "dark" : "light";
+      if (currentMode === "dark") {
+        body.classList.remove("dark-mode");
+        body.classList.add("light-mode");
+        localStorage.setItem("theme", "light");
+      } else {
+        body.classList.remove("light-mode");
+        body.classList.add("dark-mode");
+        localStorage.setItem("theme", "dark");
+      }
+    }
+
+    // Load the user's preferred theme on page load
     window.onload = function () {
+      const savedTheme = localStorage.getItem("theme") || "light";
+      document.body.classList.add(savedTheme + "-mode");
       document.getElementById("popupBanner").style.display = "flex";
     };
 
@@ -221,130 +264,6 @@
     function closePopup() {
       document.getElementById("popupBanner").style.display = "none";
     }
-
-    // Function to show/hide the loader
-    function toggleLoader(show) {
-      const loader = document.getElementById("loader");
-      loader.style.display = show ? "block" : "none";
-    }
-
-    // Function to display students (only name, course, and status for privacy)
-    function displayStudents(students) {
-      const tableBody = document.getElementById("studentsTableBody");
-      tableBody.innerHTML = "";
-
-      if (students && Object.keys(students).length > 0) {
-        Object.values(students).forEach(student => {
-          const row = tableBody.insertRow();
-          row.innerHTML = ` 
-            <td>${student.name || "N/A"}</td>
-            <td>${student.course || "N/A"}</td>
-            <td>${student.status || "Pending"}</td>
-          `;
-        });
-      } else {
-        tableBody.innerHTML = `
-          <tr><td colspan="3">Your name was not found. Please <strong>resubmit your requirements</strong> at the ID Production Office.</td></tr>
-        `;
-      }
-    }
-
-    // Slideshow functionality
-    let slideIndex = 0;
-
-    function showSlides() {
-      let slides = document.getElementsByClassName("mySlides");
-      for (let i = 0; i < slides.length; i++) {
-        slides[i].style.display = "none";
-      }
-
-      slideIndex++;
-      if (slideIndex > slides.length) {
-        slideIndex = 1;
-      }
-
-      slides[slideIndex - 1].style.display = "block";
-      setTimeout(showSlides, 3000); // Change image every 5 seconds
-    }
-
-    showSlides(); // Start the slideshow
-
-    // Search function
-    function searchStudents(keyword) {
-      toggleLoader(true);
-      firebase.database().ref("students").once("value")
-        .then(snapshot => {
-          const students = snapshot.val();
-          const results = {};
-
-          if (students) {
-            Object.keys(students).forEach(key => {
-              const student = students[key];
-              const searchString = `${student.name} ${student.course} ${student.status}`.toLowerCase();
-              if (searchString.includes(keyword.toLowerCase())) {
-                results[key] = student;
-              }
-            });
-          }
-
-          displayStudents(results);
-          toggleLoader(false);
-        })
-        .catch(error => {
-          console.error("Search failed:", error);
-          const tableBody = document.getElementById("studentsTableBody");
-          tableBody.innerHTML = `
-            <tr><td colspan="3">Error loading student data.</td></tr>
-          `;
-          toggleLoader(false);
-        });
-    }
-
-    document.addEventListener("DOMContentLoaded", function () {
-      const tableBody = document.getElementById("studentsTableBody");
-      const searchInput = document.getElementById("searchName");
-      const clearButton = document.getElementById("clear");
-
-      // Privacy message on load
-      tableBody.innerHTML = `
-        <tr><td colspan="3">Student list is hidden for privacy. Use the search bar to find a student.</td></tr>
-      `;
-
-      // Show popup
-      document.getElementById("popupBanner").style.display = "flex";
-
-      // Live search
-      searchInput.addEventListener("input", function () {
-        const keyword = this.value.trim();
-        if (keyword === "") {
-          tableBody.innerHTML = `
-            <tr><td colspan="3">Student list is hidden for privacy. Use the search bar to find a student.</td></tr>
-          `;
-        } else {
-          searchStudents(keyword);
-        }
-      });
-
-      // Manual search
-      document.getElementById("search").addEventListener("click", function () {
-        const keyword = searchInput.value.trim();
-        if (keyword === "") {
-          tableBody.innerHTML = `
-            <tr><td colspan="3">Student list is hidden for privacy. Use the search bar to find a student.</td></tr>
-          `;
-        } else {
-          searchStudents(keyword);
-        }
-      });
-
-      // Clear button
-      clearButton.addEventListener("click", function () {
-        searchInput.value = "";
-        tableBody.innerHTML = `
-          <tr><td colspan="3">Student list is hidden for privacy. Use the search bar to find a student.</td></tr>
-        `;
-      });
-    });
   </script>
 </body>
-</html> 
+</html>
