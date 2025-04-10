@@ -1,6 +1,6 @@
 // Function to display a single student or show message if not found
 function displayStudent(students) {
-  const tableBody = document.getElementById("studentTableBody");
+  const tableBody = document.getElementById("studentsTableBody");
   tableBody.innerHTML = ""; // Clear existing rows
 
   if (students) {
@@ -51,7 +51,7 @@ function searchExactName(name) {
         }
       }
 
-      displayStudent(exactMatch); // Display the first student found or null if not found
+      displayStudents(exactMatch); // Display the first student found or null if not found
     })
     .catch(error => {
       console.error("Search failed:", error);
